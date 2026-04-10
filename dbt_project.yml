@@ -22,9 +22,9 @@ seeds:
 
 models:
   hospital_dbt_bigquery:
-    staging:
+    stg:
       +schema: staging
       +materialized: view
-    marts:
+    mart:
       +schema: marts
       +materialized: table
