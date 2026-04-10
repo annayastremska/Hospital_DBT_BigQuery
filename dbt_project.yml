@@ -30,5 +30,5 @@ models:
       +materialized: table
 
 tests:
-  +store_failures: true
+  +store_failures: false
   +schema: stg      
