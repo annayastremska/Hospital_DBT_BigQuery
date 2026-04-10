@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('hospital_raw', 'organizations') }}
+    select * from {{ ref('organizations') }}
 
 ),
 
