@@ -28,3 +28,7 @@ models:
     mart:
       +schema: marts
       +materialized: table
+
+tests:
+  +store_failures: true
+  +schema: stg      
