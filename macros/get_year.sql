@@ -4,5 +4,4 @@
 -- ============================================================
 {% macro get_year(column) %}
         EXTRACT(YEAR FROM {{ column }})
-    {% endif %}
 {% endmacro %}
