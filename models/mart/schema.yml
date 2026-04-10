@@ -39,16 +39,18 @@ models:
         data_tests:
           - not_null
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
       - name: pct_zero_coverage
         description: Percentage of encounters with zero payer coverage
         data_tests:
           - not_null
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
   # ────────────────────────────────────────────────────────────
   # MART 2 — Organ System Investment Signal
@@ -74,8 +76,9 @@ models:
         description: Share of total encounters in that year belonging to this system
         data_tests:
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
       - name: volume_rank
         description: Rank by encounter count within each year (1 = highest)
@@ -99,21 +102,24 @@ models:
           - not_null
           - unique
           - accepted_values:
-              values: [high_frequency, medium_frequency, low_frequency]
+              arguments:
+                values: [high_frequency, medium_frequency, low_frequency]
 
       - name: avg_oxygen_level
         description: Average SpO2 reading (should be 95-100 for healthy patients)
         data_tests:
           - accepted_range:
-              min_value: 70
-              max_value: 100
+              arguments:
+                min_value: 70
+                max_value: 100
 
       - name: avg_heart_rate
         description: Average heart rate in bpm
         data_tests:
           - accepted_range:
-              min_value: 30
-              max_value: 200
+              arguments:
+                min_value: 30
+                max_value: 200
 
   # ────────────────────────────────────────────────────────────
   # MART 4 — Encounter Class Distribution
@@ -136,15 +142,17 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              values:
-                [ambulatory, outpatient, wellness, urgentcare, emergency, inpatient]
+              arguments:
+                values:
+                  [ambulatory, outpatient, wellness, urgentcare, emergency, inpatient]
 
       - name: pct_of_encounters
         description: Percentage of that year's total encounters
         data_tests:
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
   # ────────────────────────────────────────────────────────────
   # MART 5 — Payer Performance
@@ -167,8 +175,9 @@ models:
         description: Percentage of total billed cost covered by payer
         data_tests:
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
       - name: zero_coverage_encounters
         description: Count of encounters where payer paid nothing
@@ -195,15 +204,17 @@ models:
         description: Percentage of encounters in this segment that led to readmission
         data_tests:
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
       - name: avg_days_to_readmission
         description: Average days between discharge and next admission (≤30)
         data_tests:
           - accepted_range:
-              min_value: 0
-              max_value: 30
+              arguments:
+                min_value: 0
+                max_value: 30
 
   # ────────────────────────────────────────────────────────────
   # MART 7 — Age & Demographics Health Profile
@@ -221,14 +232,16 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              values: ['<18', '18-34', '35-49', '50-64', '65-79', '80+']
+              arguments:
+                values: ['<18', '18-34', '35-49', '50-64', '65-79', '80+']
 
       - name: pct_high_acuity_encounters
         description: Percentage of encounters that were inpatient or emergency
         data_tests:
           - accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
 
   # ────────────────────────────────────────────────────────────
   # MART 8 — Monthly Procedure Costs (Incremental)

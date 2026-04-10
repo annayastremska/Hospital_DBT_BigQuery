@@ -1,4 +1,4 @@
-{% test accepted_range(model, column_name, min_value=None, max_value=None) %}
+{% macro test_accepted_range(model, column_name, min_value=None, max_value=None) %}
 
 select {{ column_name }}
 from {{ model }}
@@ -10,7 +10,7 @@ where
     {% elif max_value is not none %}
         {{ column_name }} > {{ max_value }}
     {% else %}
-        false  -- no bounds specified, test always passes
+        false
     {% endif %}
 
-{% endtest %}
+{% endmacro %}
