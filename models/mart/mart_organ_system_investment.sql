@@ -53,7 +53,7 @@ by_system as (
         round(avg(e.payer_coverage), 2)              as avg_payer_coverage,
 
         -- most common encounter class per organ system
-        mode() within group (order by e.encounter_class)
+        APPROX_TOP_COUNT(e.encounter_class, 1)[OFFSET(0)].value
                                                      as dominant_encounter_class
 
     from encounters e

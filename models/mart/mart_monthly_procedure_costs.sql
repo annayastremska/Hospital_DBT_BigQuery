@@ -38,7 +38,7 @@ with procedures as (
         pr.procedure_start_at,
 
         -- Month grain
-        date_trunc('month', pr.procedure_start_at)::date as year_month,
+        cast(date_trunc(pr.procedure_start_at, month) as date) as year_month,
 
         -- Join in organ system from encounters
         e.organ_system

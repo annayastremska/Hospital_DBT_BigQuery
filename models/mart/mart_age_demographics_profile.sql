@@ -34,10 +34,11 @@ with base as (
         p.race,
 
         -- Age at encounter
-        date_part(
-            'year',
-            age(cast(e.encounter_start_at as date), p.birth_date)
-        )::int                                       as age_at_encounter
+        DATE_DIFF(
+            cast(e.encounter_start_at as date),
+            p.birth_date,
+            YEAR
+        )                                            as age_at_encounter
 
     from {{ ref('stg_encounters') }} e
     left join {{ ref('stg_patients') }} p

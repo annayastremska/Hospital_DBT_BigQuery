@@ -1,5 +1,5 @@
 -- ============================================================
--- mart_30da_readmissions
+-- mart_readmissions
 -- ============================================================
 -- Objective:
 --   Identify patients readmitted within 30 days of a previous
@@ -39,7 +39,7 @@ with encounters as (
         p.gender,
         {{ get_year('p.birth_date') }} as birth_year,
         -- Age at time of this encounter
-        date_part('year', age(cast(e.encounter_start_at as date), p.birth_date)) as age_at_encounter
+        DATE_DIFF(cast(e.encounter_start_at as date), p.birth_date, YEAR) as age_at_encounter
 
     from {{ ref('stg_encounters') }} e
     left join {{ ref('stg_patients') }} p
@@ -81,15 +81,15 @@ flagged as (
         *,
         case
             when next_encounter_start is not null
-             and next_encounter_start <= curr_stop + interval '30 days'
+             and next_encounter_start <= DATETIME_ADD(curr_stop, INTERVAL 30 DAY)
             then true else false
         end as readmitted_within_30d,
 
         -- Days until readmission (null if not readmitted within 30d)
         case
             when next_encounter_start is not null
-             and next_encounter_start <= curr_stop + interval '30 days'
-            then date_part('day', next_encounter_start - curr_stop)
+             and next_encounter_start <= DATETIME_ADD(curr_stop, INTERVAL 30 DAY)
+            then DATE_DIFF(cast(next_encounter_start as date), cast(curr_stop as date), DAY)
         end as days_to_readmission
 
     from with_next
@@ -104,9 +104,9 @@ select
     gender,
 
     count(*)                                                   as total_encounters,
-    sum(readmitted_within_30d::int)                            as readmitted_count,
+    sum(cast(readmitted_within_30d as int64))                  as readmitted_count,
     {{ pct_of_total(
-        'sum(readmitted_within_30d::int)',
+        'sum(cast(readmitted_within_30d as int64))',
         'count(*)'
     ) }}                                                       as readmission_rate_pct,
 
@@ -117,6 +117,6 @@ from flagged
 group by
     curr_organ_system, curr_class, age_bucket, race, gender
 having
-    sum(readmitted_within_30d::int) > 0
+    sum(cast(readmitted_within_30d as int64)) > 0
 order by
     readmitted_count desc

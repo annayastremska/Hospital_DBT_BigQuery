@@ -32,23 +32,27 @@ with patient_visit_counts as (
     group by patient_id
 ),
 
--- Step 2: label patients by frequency tertile
+-- Step 2a: compute tertile thresholds using BigQuery window-function syntax
+visit_thresholds as (
+    select
+        PERCENTILE_CONT(visit_count_2022, 0.67) OVER () as p67,
+        PERCENTILE_CONT(visit_count_2022, 0.33) OVER () as p33
+    from patient_visit_counts
+    limit 1
+),
+
+-- Step 2b: label patients by frequency tertile
 frequency_buckets as (
     select
-        patient_id,
-        visit_count_2022,
+        pvc.patient_id,
+        pvc.visit_count_2022,
         case
-            when visit_count_2022 >= percentile_cont(0.67)
-                     within group (order by visit_count_2022)
-                     over ()
-            then 'high_frequency'
-            when visit_count_2022 >= percentile_cont(0.33)
-                     within group (order by visit_count_2022)
-                     over ()
-            then 'medium_frequency'
+            when pvc.visit_count_2022 >= vt.p67 then 'high_frequency'
+            when pvc.visit_count_2022 >= vt.p33 then 'medium_frequency'
             else 'low_frequency'
         end as frequency_bucket
-    from patient_visit_counts
+    from patient_visit_counts pvc
+    cross join visit_thresholds vt
 ),
 
 -- Step 3: join vitals to frequency bucket
