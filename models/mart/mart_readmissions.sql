@@ -114,6 +114,7 @@ select
     round(avg(total_claim_cost), 2)                           as avg_claim_cost
 
 from flagged
+where curr_organ_system is not null
 group by
     curr_organ_system, curr_class, age_bucket, race, gender
 having

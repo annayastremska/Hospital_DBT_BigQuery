@@ -38,19 +38,17 @@ models:
         description: Percentage of total revenue covered by payers (0-100)
         data_tests:
           - not_null
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "pct_covered_by_payer >= 0 and pct_covered_by_payer <= 100"
 
       - name: pct_zero_coverage
         description: Percentage of encounters with zero payer coverage
         data_tests:
           - not_null
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "pct_zero_coverage >= 0 and pct_zero_coverage <= 100"
 
   # ────────────────────────────────────────────────────────────
   # MART 2 — Organ System Investment Signal
@@ -75,10 +73,9 @@ models:
       - name: pct_of_year_encounters
         description: Share of total encounters in that year belonging to this system
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "pct_of_year_encounters >= 0 and pct_of_year_encounters <= 100"
 
       - name: volume_rank
         description: Rank by encounter count within each year (1 = highest)
@@ -108,18 +105,16 @@ models:
       - name: avg_oxygen_level
         description: Average SpO2 reading (should be 95-100 for healthy patients)
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 70
-                max_value: 100
+                expression: "avg_oxygen_level >= 70 and avg_oxygen_level <= 100"
 
       - name: avg_heart_rate
         description: Average heart rate in bpm
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 30
-                max_value: 200
+                expression: "avg_heart_rate >= 30 and avg_heart_rate <= 200"
 
   # ────────────────────────────────────────────────────────────
   # MART 4 — Encounter Class Distribution
@@ -137,7 +132,7 @@ models:
         data_tests:
           - not_null
 
-      - name: encounterclass
+      - name: encounter_class
         description: Type of care setting
         data_tests:
           - not_null
@@ -149,10 +144,9 @@ models:
       - name: pct_of_encounters
         description: Percentage of that year's total encounters
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "pct_of_encounters >= 0 and pct_of_encounters <= 100"
 
   # ────────────────────────────────────────────────────────────
   # MART 5 — Payer Performance
@@ -174,10 +168,9 @@ models:
       - name: pct_cost_covered_by_payer
         description: Percentage of total billed cost covered by payer
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "pct_cost_covered_by_payer >= 0 and pct_cost_covered_by_payer <= 100"
 
       - name: zero_coverage_encounters
         description: Count of encounters where payer paid nothing
@@ -203,18 +196,16 @@ models:
       - name: readmission_rate_pct
         description: Percentage of encounters in this segment that led to readmission
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "readmission_rate_pct >= 0 and readmission_rate_pct <= 100"
 
       - name: avg_days_to_readmission
         description: Average days between discharge and next admission (≤30)
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 30
+                expression: "avg_days_to_readmission >= 0 and avg_days_to_readmission <= 30"
 
   # ────────────────────────────────────────────────────────────
   # MART 7 — Age & Demographics Health Profile
@@ -238,10 +229,9 @@ models:
       - name: pct_high_acuity_encounters
         description: Percentage of encounters that were inpatient or emergency
         data_tests:
-          - dbt_utils.accepted_range:
+          - expression_is_true:
               arguments:
-                min_value: 0
-                max_value: 100
+                expression: "pct_high_acuity_encounters >= 0 and pct_high_acuity_encounters <= 100"
 
   # ────────────────────────────────────────────────────────────
   # MART 8 — Monthly Procedure Costs (Incremental)
@@ -269,5 +259,5 @@ models:
         data_tests:
           - not_null
 
-      - name: start_ts_max
+      - name: procedure_start_at_max
         description: Watermark column used by incremental logic — do not query directly
