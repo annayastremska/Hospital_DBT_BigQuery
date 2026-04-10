@@ -78,22 +78,25 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('stg_patients')
-              field: patient_id
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
       - name: organization_id
         description: FK → stg_organizations.
         tests:
           - not_null
           - relationships:
-              to: ref('stg_organizations')
-              field: organization_id
+              arguments:
+                to: ref('stg_organizations')
+                field: organization_id
       - name: payer_id
         description: FK → stg_payers.
         tests:
           - not_null
           - relationships:
-              to: ref('stg_payers')
-              field: payer_id
+              arguments:
+                to: ref('stg_payers')
+                field: payer_id
       - name: base_encounter_cost
         tests:
           - not_null
@@ -112,15 +115,17 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('stg_encounters')
-              field: encounter_id
+              arguments:
+                to: ref('stg_encounters')
+                field: encounter_id
       - name: patient_id
         description: FK → stg_patients.
         tests:
           - not_null
           - relationships:
-              to: ref('stg_patients')
-              field: patient_id
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
       - name: procedure_cost
         tests:
           - not_null
@@ -139,15 +144,17 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('stg_patients')
-              field: patient_id
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
       - name: encounter_id
         description: FK → stg_encounters.
         tests:
           - not_null
           - relationships:
-              to: ref('stg_encounters')
-              field: encounter_id
+              arguments:
+                to: ref('stg_encounters')
+                field: encounter_id
       - name: recorded_at
         tests:
           - not_null
