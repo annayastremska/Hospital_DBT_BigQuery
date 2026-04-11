@@ -54,7 +54,6 @@ aggregated as (
     select
         year_month,
         procedure_description,
-        organ_system,
 
         count(*)                                 as procedure_count,
         count(distinct patient_id)               as unique_patients,
