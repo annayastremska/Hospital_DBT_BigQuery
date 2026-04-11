@@ -51,11 +51,14 @@ frequency_buckets as (
 ),
 
 -- Step 3: join vitals to frequency bucket
+-- Note: stg_vitals is a time-series table — inpatient stays generate
+-- 10-48 rows per encounter. Averages across all rows are correct.
 vitals_with_bucket as (
     select
         fb.patient_id,
         fb.frequency_bucket,
         fb.visit_count_2022,
+        v.encounter_id,
         v.heart_rate,
         v.oxygen_level,
         v.systolic_bp,
@@ -70,7 +73,8 @@ vitals_with_bucket as (
 -- Step 4: aggregate vitals per bucket
 select
     frequency_bucket,
-    count(*)                             as vital_readings,
+    count(*)                             as vital_measurement_rows,
+    count(distinct encounter_id)         as encounters_with_vitals,
     count(distinct patient_id)           as patient_count,
 
     -- Heart
