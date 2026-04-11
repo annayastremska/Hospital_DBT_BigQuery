@@ -12,9 +12,14 @@
 --    visitors are likely the sicker, higher-acuity cohort
 --    that needs dedicated care pathways.
 --
+-- Bucketing logic (fixed thresholds):
+--   low_frequency    = 1-2 visits
+--   medium_frequency = 3-5 visits
+--   high_frequency   = 6+ visits
+--
 -- Granularity:
---   One row per frequency_bucket (e.g. high / medium / low)
---   showing average vitals and visit counts.
+--   One row per frequency_bucket showing average vitals
+--   and visit counts.
 -- ============================================================
 
 {{ config(
@@ -22,7 +27,7 @@
     tags         = ['mart', 'clinical', 'vitals']
 ) }}
 
--- Step 1: count 2022 visits per patient from the encounters table
+-- Step 1: count 2022 visits per patient
 with patient_visit_counts as (
     select
         patient_id,
@@ -32,27 +37,17 @@ with patient_visit_counts as (
     group by patient_id
 ),
 
--- Step 2a: compute tertile thresholds as a single scalar row
--- Using DISTINCT to guarantee exactly one row regardless of tie-breaking
-visit_thresholds as (
-    select distinct
-        PERCENTILE_CONT(visit_count_2022, 0.67) OVER () as p67,
-        PERCENTILE_CONT(visit_count_2022, 0.33) OVER () as p33
-    from patient_visit_counts
-),
-
--- Step 2b: label patients by frequency tertile
+-- Step 2: label patients by fixed visit thresholds
 frequency_buckets as (
     select
-        pvc.patient_id,
-        pvc.visit_count_2022,
+        patient_id,
+        visit_count_2022,
         case
-            when pvc.visit_count_2022 >= vt.p67 then 'high_frequency'
-            when pvc.visit_count_2022 >= vt.p33 then 'medium_frequency'
-            else 'low_frequency'
+            when visit_count_2022 >= 6 then 'high_frequency'
+            when visit_count_2022 >= 3 then 'medium_frequency'
+            else                            'low_frequency'
         end as frequency_bucket
-    from patient_visit_counts pvc
-    cross join visit_thresholds vt
+    from patient_visit_counts
 ),
 
 -- Step 3: join vitals to frequency bucket
