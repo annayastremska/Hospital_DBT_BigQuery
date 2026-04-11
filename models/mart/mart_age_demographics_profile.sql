@@ -4,7 +4,6 @@
 -- Objective:
 --   Show how encounter volume, revenue, organ system mix, and
 --   encounter class vary by patient age group and gender.
---   This is the "age" mart proposed in the brief.
 --
 -- Business & clinical questions:
 --   • Which age groups consume the most healthcare resources?

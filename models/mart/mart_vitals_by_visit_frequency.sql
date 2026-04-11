@@ -32,13 +32,13 @@ with patient_visit_counts as (
     group by patient_id
 ),
 
--- Step 2a: compute tertile thresholds using BigQuery window-function syntax
+-- Step 2a: compute tertile thresholds as a single scalar row
+-- Using DISTINCT to guarantee exactly one row regardless of tie-breaking
 visit_thresholds as (
-    select
+    select distinct
         PERCENTILE_CONT(visit_count_2022, 0.67) OVER () as p67,
         PERCENTILE_CONT(visit_count_2022, 0.33) OVER () as p33
     from patient_visit_counts
-    limit 1
 ),
 
 -- Step 2b: label patients by frequency tertile
@@ -58,6 +58,7 @@ frequency_buckets as (
 -- Step 3: join vitals to frequency bucket
 vitals_with_bucket as (
     select
+        fb.patient_id,
         fb.frequency_bucket,
         fb.visit_count_2022,
         v.heart_rate,
@@ -75,10 +76,7 @@ vitals_with_bucket as (
 select
     frequency_bucket,
     count(*)                             as vital_readings,
-    count(distinct
-        -- proxy for unique patients via the join
-        frequency_bucket
-    )                                    as patient_count,
+    count(distinct patient_id)           as patient_count,
 
     -- Heart
     round(avg(heart_rate), 1)            as avg_heart_rate,

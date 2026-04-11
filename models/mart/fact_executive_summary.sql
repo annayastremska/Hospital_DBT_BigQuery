@@ -91,4 +91,4 @@ select
     )                                                            as encounter_growth_pct_yoy
 
 from yearly
-order by encounter_year
+order by encounter_year desc

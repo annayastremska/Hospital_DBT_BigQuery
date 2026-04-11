@@ -13,7 +13,6 @@
 --
 -- Business questions:
 --   • Which procedures are driving cost growth month-over-month?
---   • Which organ systems have rising procedure costs?
 --   • Are medicine costs a meaningful share of procedure costs?
 --
 -- Granularity: one row per year-month × procedure_description
@@ -40,12 +39,8 @@ with procedures as (
         -- Month grain
         cast(date_trunc(pr.procedure_start_at, month) as date) as year_month,
 
-        -- Join in organ system from encounters
-        e.organ_system
 
     from {{ ref('stg_procedures') }} pr
-    left join {{ ref('stg_encounters') }} e
-        on pr.encounter_id = e.encounter_id
 
     -- ── Incremental filter ───────────────────────────────────
     {% if is_incremental() %}
@@ -76,7 +71,8 @@ aggregated as (
         max(procedure_start_at)                  as procedure_start_at_max
 
     from procedures
-    group by year_month, procedure_description, organ_system
+    group by year_month, procedure_description
+    order by year_month desc
 )
 
 select * from aggregated

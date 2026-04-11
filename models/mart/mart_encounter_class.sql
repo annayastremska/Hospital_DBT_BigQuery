@@ -65,4 +65,4 @@ select
 from by_class bc
 join yearly_totals yt
     on bc.encounter_year = yt.encounter_year
-order by bc.encounter_year, bc.encounter_class
+order by bc.encounter_year desc, bc.encounter_class
