@@ -2,8 +2,7 @@
 -- fact_executive_summary
 -- ============================================================
 -- Objective:
---   Single-row-per-year executive dashboard. Tracks the core
---   financial and operational KPIs the board needs at a glance:
+--   Single-row-per-year executive dashboard:
 --   visit volume, revenue, payer coverage, average costs, and
 --   patient count.  Each row = one calendar year.
 --

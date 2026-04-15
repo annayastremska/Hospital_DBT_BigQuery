@@ -7,7 +7,7 @@
 --   each month are merged without rebuilding the whole table.
 --
 -- Why incremental here?
---   Procedures are the highest-volume source table (47k+ rows)
+--   Procedures are the highest-volume source table
 --   and grow with every encounter.  Full-refresh every run is
 --   wasteful; incremental on start date keeps things fast.
 --

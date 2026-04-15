@@ -51,8 +51,7 @@ frequency_buckets as (
 ),
 
 -- Step 3: join vitals to frequency bucket
--- Note: stg_vitals is a time-series table — inpatient stays generate
--- 10-48 rows per encounter. Averages across all rows are correct.
+
 vitals_with_bucket as (
     select
         fb.patient_id,
