@@ -6,8 +6,4 @@ sources:
       - name: encounters
       - name: procedures
       - name: patients
-      - name: medicines
-      - name: organizations
-      - name: payers
-      - name: procedure_costs
       - name: vitals

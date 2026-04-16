@@ -33,8 +33,7 @@ renamed as (
         reasondescription                           as reason_description,
 
         -- metadata
-        organ_system
-
+    NULLIF(organ_system, '') as organ_system
     from source
 
 )
